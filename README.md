@@ -23,8 +23,6 @@ Ensure the following are installed:
 -  Clone the repository:
 ```bash
 git clone https://github.com/ali-asanjarany/Tic_Tac_Toe_Reinforcement_Learning.git
-
-cd Tic-Tac-Toe-Reinforcement-Learning
 ```
 
 -  Execute the main file:
