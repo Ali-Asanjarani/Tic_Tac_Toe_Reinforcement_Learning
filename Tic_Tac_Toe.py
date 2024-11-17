@@ -24,7 +24,16 @@ class TicTacToe:
         self.agent_score = 0
         self.human_score = 0
         self.tie = 0
-        
+
+    def map_position(self, position):
+        """ Map the input position (1-9) to the reversed board's index (0-8)."""
+        mapping = [0, 1, 2, 3, 4, 5, 6, 7, 8]  # Mapping for reversed board
+        if 0 <= position <= 8:  # Ensure position is within valid range
+            return mapping[position]
+        else:
+            raise ValueError("Position out of range")
+
+       
     def reset_board(self):
         """ Reset the game board for a new game. """
         self.board = ["-"] * 9
@@ -32,8 +41,9 @@ class TicTacToe:
     
     def make_move(self, position):
         """ Place the current player's symbol in the specified position. """
-        if self.board[position] == "-":
-            self.board[position] = self.current_player
+        mapped_position = self.map_position(position)  # Map the position to reversed board
+        if self.board[mapped_position] == "-":
+            self.board[mapped_position] = self.current_player
             return True
         return False
 
@@ -61,11 +71,12 @@ class TicTacToe:
         self.current_player = "O" if self.current_player == "X" else "X"
 
     def display_board_text(self):
-        """Display the board in text format"""
-        for i in range(0, 9, 3):
+        # Display the board in text format (reversed)
+        for i in range(6, -1, -3):  # Start from the bottom row (6-8) and move up
             print(f" {self.board[i]} | {self.board[i+1]} | {self.board[i+2]} ")
-            if i < 6:
+            if i > 0:
                 print("-----------")
+
 
 class Agent:
     def __init__(self, epsilon=0.1, alpha=0.5, gamma=0.9):
@@ -172,6 +183,24 @@ class TextBasedGame:
     def __init__(self):
         self.game = TicTacToe()
         self.agent = Agent()
+        # Predefined messages
+        self.messages = {
+            "win": [
+                "Congratulations! You won! 🎉 Ready for the next round?",
+                "Amazing victory! 👏 Let’s see how you do in the next round!",
+                "You’re the master of this game! 😎 Shall we start again?",
+            ],
+            "lose": [
+                "The Agent won this time, but you can do better in the next round! 💪",
+                "The Agent claimed this round, but you’re getting stronger! 🤖 Ready for a rematch?",
+                "Don’t worry, losing is part of the journey! 🌟 The next round is yours!",
+            ],
+            "tie": [
+                "It’s a draw! 🤝 Let’s try again!",
+                "You tied! Looks like it’s a close match! 😄 Ready for another round?",
+                "Great match! Let’s see what happens in the next round! 🚀",
+            ],
+        }
 
     def clear_screen(self):
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -191,14 +220,15 @@ class TextBasedGame:
                     try:
                         print("\nYour turn! Enter position (1-9): ")
                         print("Board positions are numbered like this:")
-                        print(" 1 | 2 | 3 ")
+                        print(" 7 | 8 | 9 ")
                         print("-----------")
                         print(" 4 | 5 | 6 ")
                         print("-----------")
-                        print(" 7 | 8 | 9 ")
+                        print(" 1 | 2 | 3 ")
                         
-                        position = int(input()) - 1
-                        if 0 <= position <= 8 and self.game.make_move(position):
+                        position = int(input()) - 1  # User input (1-9)
+                        mapped_position = self.game.map_position(position)  # Map position for reversed board
+                        if 0 <= mapped_position <= 8 and self.game.make_move(position):
                             break
                         print("Invalid move! Try again.")
                     except ValueError:
@@ -206,6 +236,10 @@ class TextBasedGame:
 
             result = self.game.check_game_over()
             if result == "win":
+                if self.game.current_player == "O":
+                    self.display_message("win")  # Player won
+                else:
+                    self.display_message("lose")  # Agent won
                 self.clear_screen()
                 self.game.display_board_text()
                 winner = "Human" if self.game.current_player == "O" else "Agent"
@@ -217,11 +251,16 @@ class TextBasedGame:
                 self.clear_screen()
                 self.game.display_board_text()
                 print("\nIt's a tie!")
+                self.display_message("tie")
                 self.game.update_score()
                 self.play_again()
                 break
 
             self.game.switch_player()
+
+    def display_message(self, result):
+        """ Display a random message based on the game outcome. """
+        print("\n" + random.choice(self.messages[result]))
 
     def play_again(self):
         while True:
