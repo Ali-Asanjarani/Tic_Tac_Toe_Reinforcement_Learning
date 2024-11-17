@@ -22,7 +22,8 @@ Ensure the following are installed:
 #### **2. Running the Game**
 -  Clone the repository:
 ```bash
-git clone https://github.com/ali-asanjarany/Tic-Tac-Toe-Reinforcement-Learning.git
+git clone https://github.com/ali-asanjarany/Tic_Tac_Toe_Reinforcement_Learning.git
+
 cd Tic-Tac-Toe-Reinforcement-Learning
 ```
 
