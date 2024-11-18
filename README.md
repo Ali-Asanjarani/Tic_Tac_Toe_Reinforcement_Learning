@@ -87,3 +87,16 @@ We welcome your contributions :
 * ⭐ Star this repository!
 * 📨 Share it with your friends!
 * 💬 Submit your feedback in the Issues section!
+
+
+
+## Project Timeline
+
+| Stage            | Description                       | Start Date  | End Date    | Duration   |
+|-------------------|-----------------------------------|-------------|-------------|------------|
+| Research          | Studying reinforcement learning  | 2024-11-05  | 2024-11-08  | 3 days     |
+| Development       | Coding and implementing project  | 2024-11-09  | 2024-11-15  | 6 days     |
+| Testing and Debug | Final debugging and testing      | 2024-11-16  | 2024-11-18  | 2 days     |
+
+**Total Duration :** 13 days
+
