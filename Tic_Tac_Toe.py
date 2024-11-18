@@ -96,8 +96,7 @@ class Agent:
     def update_value(self, prev_state, reward, next_state):
         prev_value = self.get_state_value(prev_state)
         next_value = self.get_state_value(next_state)
-        new_value = prev_value + self.alpha * (
-             + self.gamma * next_value - prev_value)
+        new_value = prev_value + self.alpha * (reward + self.gamma * next_value - prev_value)
         
         print(f"Updating state {prev_state} from {prev_value} to {new_value}")  # Debug print
         
