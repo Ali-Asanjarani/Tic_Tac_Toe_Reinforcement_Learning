@@ -16,9 +16,12 @@ This is a classic Tic-Tac-Toe game enhanced with **Reinforcement Learning (RL)**
 Ensure the following are installed:
 - **Python 3.8 or higher**
 - Required libraries:
-  ```bash
-  pip install -r requirements.txt
-  ```
+  random
+  os
+  requests
+  firebase-admin
+  json
+
 #### **2. Running the Game**
 -  Clone the repository:
 ```bash
