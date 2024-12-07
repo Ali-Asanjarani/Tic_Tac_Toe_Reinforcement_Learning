@@ -97,9 +97,9 @@ We welcome your contributions :
 
 | Stage            | Description                       | Start Date  | End Date    | Duration   |
 |-------------------|-----------------------------------|-------------|-------------|------------|
-| Research          | Studying reinforcement learning  | 2024-11-05  | 2024-11-08  | 3 days     |
-| Development       | Coding and implementing project  | 2024-11-09  | 2024-11-15  | 6 days     |
-| Testing and Debug | Final debugging and testing      | 2024-11-16  | 2024-11-18  | 2 days     |
+| Research          | Studying reinforcement learning  | 2024-11-05  | 2024-11-08  | 4 days     |
+| Development       | Coding and implementing project  | 2024-11-09  | 2024-11-15  | 7 days     |
+| Testing and Debug | Final debugging and testing      | 2024-11-16  | 2024-11-18  | 3 days     |
 
-**Total Duration :** 13 days
+**Total Duration :** 14 days
 
