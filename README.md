@@ -17,7 +17,7 @@ Ensure the following are installed:
 - **Python 3.8 or higher**
 - Required libraries:
   ```bash
-  pip install requests
+  pip install -r requirements.txt
   ```
 #### **2. Running the Game**
 -  Clone the repository:
