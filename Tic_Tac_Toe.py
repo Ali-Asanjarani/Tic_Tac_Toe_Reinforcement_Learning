@@ -79,26 +79,53 @@ class TicTacToe:
 
 
 class Agent:
-    def __init__(self, epsilon=0.1, alpha=0.5, gamma=0.9):
+    def __init__(self, epsilon=0.1, alpha=0.5, epsilon_decay=0.995):
         # Learning parameters
         self.epsilon = epsilon
         self.alpha = alpha
-        self.gamma = gamma
+        self.epsilon_decay = epsilon_decay
+        self.min_epsilon = 0.01
         self.value_function = {}
         
         # Load initial values from Firebase
         self.load_values_from_firebase()
 
+    def normalize_state(self, board_state):
+        """Convert board state to normalized form considering symmetries"""
+        # Convert string to list for easier manipulation
+        board = list(board_state)
+        
+        # Define all possible symmetrical transformations
+        transformations = [
+            # Original
+            lambda x: x,
+            # Rotations
+            lambda x: [x[6], x[7], x[8], x[3], x[4], x[5], x[0], x[1], x[2]],
+            lambda x: [x[8], x[7], x[6], x[5], x[4], x[3], x[2], x[1], x[0]],
+            lambda x: [x[2], x[1], x[0], x[5], x[4], x[3], x[8], x[7], x[6]],
+            # Reflections
+            lambda x: [x[2], x[1], x[0], x[5], x[4], x[3], x[8], x[7], x[6]],
+            lambda x: [x[6], x[3], x[0], x[7], x[4], x[1], x[8], x[5], x[2]]
+        ]
+        
+        # Get all possible transformations and return the lexicographically smallest
+        states = [''.join(t(board)) for t in transformations]
+        return min(states)
+
     def get_state_value(self, state):
-        # Get the value of a given state, defaulting to 0.5 if not seen
-        return self.value_function.get(state, 0.5)
+        # Normalize state before getting value
+        normalized_state = self.normalize_state(state)
+        return self.value_function.get(normalized_state, 0.5)
 
     def update_value(self, prev_state, reward, next_state):
         prev_value = self.get_state_value(prev_state)
-        next_value = self.get_state_value(next_state)
-        new_value = prev_value + self.alpha * (reward + self.gamma * next_value - prev_value)
         
-        print(f"Updating state {prev_state} from {prev_value} to {new_value}")  # Debug print
+        # Terminal state handling
+        if reward in [-1.0, 1.0]:  # Win/Loss states
+            new_value = prev_value + self.alpha * (reward - prev_value)
+        else:
+            next_value = self.get_state_value(next_state)
+            new_value = prev_value + self.alpha * (reward + next_value - prev_value)
         
         self.value_function[prev_state] = new_value
         self.update_value_in_firebase(prev_state, new_value)
@@ -137,13 +164,24 @@ class Agent:
         new_state = "".join(game.board)
         
         # Update value function and Firebase
-        reward = 0  # You can modify this based on game outcome
+        reward = self.calculate_reward(game)  # Replace the zero reward
         self.update_value(current_state, reward, new_state)
         
         # Undo the move (since the actual game will make it)
         game.board[position] = "-"
         
         return position
+
+    def calculate_reward(self, game):
+        """Calculate reward based on game state"""
+        result = game.check_game_over()
+        if result == "win" and game.current_player == "X":
+            return 1.0  # Agent wins
+        elif result == "win" and game.current_player == "O":
+            return -1.0  # Agent loses
+        elif result == "tie":
+            return 0.2  # Tie is slightly positive
+        return 0.0  # Game not over
 
     def update_value_in_firebase(self, state, value):
         try:
@@ -177,6 +215,10 @@ class Agent:
                 
         except Exception as e:
             print(f"Error loading from Firebase: {str(e)}")
+
+    def decay_epsilon(self):
+        """Decay epsilon after each game"""
+        self.epsilon = max(self.min_epsilon, self.epsilon * self.epsilon_decay)
 
 class TextBasedGame:
     def __init__(self):
