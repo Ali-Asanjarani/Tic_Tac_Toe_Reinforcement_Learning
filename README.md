@@ -1,5 +1,7 @@
 # Tic-Tac-Toe with Reinforcement Learning 🎮🤖
 
+![thumbnail](https://github.com/user-attachments/assets/d3745755-4e2a-48b0-9804-91d1e4f70022)
+
 ### **🔍 About the Project**
 This is a classic Tic-Tac-Toe game enhanced with **Reinforcement Learning (RL)**! 🤓 The AI learns from its experience to improve its gameplay using a Firebase database to store and update its states.
 
