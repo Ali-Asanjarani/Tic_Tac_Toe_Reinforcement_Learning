@@ -12,7 +12,7 @@ class TicTacToe:
     def __init__(self
                  ):
         # Initialize the game board and the starting player
-        self.board = ["-"] * 9  # 9 empty cells for the board
+        self.board = ["-"] * 9  # Initialize 3x3 board with empty cells represented by "-"
         self.current_player = "X"  # Starting player
         self.winning_combinations = [
             [0, 1, 2], [3, 4, 5], [6, 7, 8],  # Rows
@@ -79,6 +79,16 @@ class TicTacToe:
 
 
 class Agent:
+    """
+    AI agent that learns to play Tic-Tac-Toe using value function approximation.
+    
+    Attributes:
+        epsilon (float): Exploration rate for epsilon-greedy strategy
+        alpha (float): Learning rate for value function updates
+        epsilon_decay (float): Rate at which exploration decreases over time
+        value_function (dict): Maps board states to their estimated values
+    """
+    
     def __init__(self, epsilon=0.1, alpha=0.5, epsilon_decay=0.995):
         # Learning parameters
         self.epsilon = epsilon
@@ -91,7 +101,19 @@ class Agent:
         self.load_values_from_firebase()
 
     def normalize_state(self, board_state):
-        """Convert board state to normalized form considering symmetries"""
+        """
+        Convert board state to normalized form considering symmetries.
+        
+        The board can be transformed in 8 ways (4 rotations × 2 reflections).
+        We store only the lexicographically smallest representation to reduce
+        memory usage and improve learning efficiency.
+        
+        Args:
+            board_state (str): Current board state as a string
+            
+        Returns:
+            str: Normalized (canonical) form of the board state
+        """
         # Convert string to list for easier manipulation
         board = list(board_state)
         
